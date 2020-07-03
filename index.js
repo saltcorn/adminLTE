@@ -18,15 +18,19 @@ const {
 const renderLayout = require("@saltcorn/markup/layout");
 const aside = mkTag("aside");
 const subItem = currentUrl => item =>
-  item.link
-    ? a(
-        {
-          class: ["collapse-item", active(currentUrl, item) && "active"],
-          href: text(item.link)
-        },
-        item.label
-      )
-    : h6({ class: "collapse-header" }, item.label);
+  li(
+    { class: "nav-item" },
+    item.link
+      ? a(
+          {
+            class: ["nav-link", active(currentUrl, item) && "active"],
+            href: text(item.link)
+          },
+          i({ class: "far fa-circle nav-icon" }),
+          p(item.label)
+        )
+      : h6({ class: "collapse-header" }, item.label)
+  );
 
 const labelToId = item => text(item.label.replace(" ", ""));
 
@@ -43,33 +47,33 @@ const active = (currentUrl, item) =>
 const sideBarItem = currentUrl => item => {
   const is_active = active(currentUrl, item);
   return li(
-    { class: ["nav-item", is_active && "active"] },
+    {
+      class: [
+        "nav-item",
+        item.subitems && "has-treeview",
+        item.subitems && is_active && "menu-open"
+      ]
+    },
     item.link
-      ? a({ class: "nav-link", href: text(item.link) }, span(text(item.label)))
+      ? a(
+          { class: ["nav-link", is_active && "active"], href: text(item.link) },
+          p(text(item.label))
+        )
       : item.subitems
       ? [
           a(
             {
-              class: ["nav-link", !is_active && "collapsed"],
-              href: "#",
-              "data-toggle": "collapse",
-              "data-target": `#collapse${labelToId(item)}`,
-              "aria-expanded": "true",
-              "aria-controls": `collapse${labelToId(item)}`
+              class: ["nav-link", is_active && "active"],
+              href: "#"
             },
             //i({ class: "fas fa-fw fa-wrench" }),
-            span(text(item.label))
+            p(text(item.label), i({ class: "right fas fa-angle-left" }))
           ),
-          div(
+          ul(
             {
-              id: `collapse${labelToId(item)}`,
-              class: ["collapse", is_active && "show"],
-              "data-parent": "#accordionSidebar"
+              class: ["nav nav-treeview"]
             },
-            div(
-              { class: "bg-white py-2 collapse-inner rounded" },
-              item.subitems.map(subItem(currentUrl))
-            )
+            item.subitems.map(subItem(currentUrl))
           )
         ]
       : span({ class: "nav-link" }, text(item.label))
@@ -78,8 +82,7 @@ const sideBarItem = currentUrl => item => {
 
 const sideBarSection = currentUrl => section => [
   section.section &&
-    hr({ class: "sidebar-divider" }) +
-      div({ class: "sidebar-heading" }, section.section),
+    li({ class: "nav-header text-uppercase" }, section.section),
   section.items.map(sideBarItem(currentUrl)).join("")
 ];
 
@@ -102,6 +105,9 @@ const sidebar = (brand, sections, currentUrl) =>
         ul(
           {
             class: "nav nav-pills nav-sidebar flex-column",
+            "data-widget": "treeview",
+            role: "menu",
+            "data-accordion": "false",
             id: "accordionSidebar"
           },
           sections.map(sideBarSection(currentUrl))
