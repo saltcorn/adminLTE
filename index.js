@@ -16,7 +16,7 @@ const {
   nav
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
-const aside=mkTag('aside')
+const aside = mkTag("aside");
 const subItem = currentUrl => item =>
   item.link
     ? a(
@@ -84,8 +84,9 @@ const sideBarSection = currentUrl => section => [
 ];
 
 const sidebar = (brand, sections, currentUrl) =>
-  aside({class:"main-sidebar sidebar-dark-primary elevation-4"},
-  a(
+  aside(
+    { class: "main-sidebar sidebar-dark-primary elevation-4" },
+    a(
       {
         class: "brand-link",
         href: "/"
@@ -94,15 +95,20 @@ const sidebar = (brand, sections, currentUrl) =>
       //i({class:"fas fa-laugh-wink"})),
       span({ class: "brand-text font-weight-light" }, brand.name)
     ),
-  div({class:"sidebar"},
-  nav({class:"mt-2"},
-  ul(
-    {
-      class: "nav nav-pills nav-sidebar flex-column",
-      id: "accordionSidebar"
-    },
-    sections.map(sideBarSection(currentUrl))
-  ))));
+    div(
+      { class: "sidebar" },
+      nav(
+        { class: "mt-2" },
+        ul(
+          {
+            class: "nav nav-pills nav-sidebar flex-column",
+            id: "accordionSidebar"
+          },
+          sections.map(sideBarSection(currentUrl))
+        )
+      )
+    )
+  );
 
 const blockDispatch = {
   pageHeader: ({ title, blurb }) =>
@@ -192,7 +198,7 @@ const wrap = ({
     <div id="wrapper">
       ${sidebar(brand, menu, currentUrl)}
 
-      <div id="content-wrapper">
+      <div class="content-wrapper">
         <section id="content">
           <div class="container-fluid">
             ${alerts.map(a => alert(a.type, a.msg)).join("")}
