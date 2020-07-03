@@ -1,5 +1,5 @@
 {
-  "name": "@saltcorn/adminLTE",
+  "name": "@saltcorn/adminlte",
   "version": "0.1.0",
   "description": "AdminLTE layout plugin",
   "main": "index.js",
