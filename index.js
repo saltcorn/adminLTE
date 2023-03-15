@@ -13,18 +13,18 @@ const {
   header,
   footer,
   mkTag,
-  nav
+  nav,
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
 const aside = mkTag("aside");
-const subItem = currentUrl => item =>
+const subItem = (currentUrl) => (item) =>
   li(
     { class: "nav-item" },
     item.link
       ? a(
           {
             class: ["nav-link", active(currentUrl, item) && "active"],
-            href: text(item.link)
+            href: text(item.link),
           },
           i({ class: "far fa-circle nav-icon" }),
           p(item.label)
@@ -32,7 +32,7 @@ const subItem = currentUrl => item =>
       : h6({ class: "collapse-header" }, item.label)
   );
 
-const labelToId = item => text(item.label.replace(" ", ""));
+const labelToId = (item) => text(item.label.replace(" ", ""));
 
 const logit = (x, s) => {
   if (s) console.log(s, x);
@@ -42,17 +42,17 @@ const logit = (x, s) => {
 const active = (currentUrl, item) =>
   (item.link && currentUrl.startsWith(item.link)) ||
   (item.subitems &&
-    item.subitems.some(si => si.link && currentUrl.startsWith(si.link)));
+    item.subitems.some((si) => si.link && currentUrl.startsWith(si.link)));
 
-const sideBarItem = currentUrl => item => {
+const sideBarItem = (currentUrl) => (item) => {
   const is_active = active(currentUrl, item);
   return li(
     {
       class: [
         "nav-item",
         item.subitems && "has-treeview",
-        item.subitems && is_active && "menu-open"
-      ]
+        item.subitems && is_active && "menu-open",
+      ],
     },
     item.link
       ? a(
@@ -64,27 +64,28 @@ const sideBarItem = currentUrl => item => {
           a(
             {
               class: ["nav-link", is_active && "active"],
-              href: "#"
+              href: "#",
             },
             //i({ class: "fas fa-fw fa-wrench" }),
             p(text(item.label), i({ class: "right fas fa-angle-left" }))
           ),
           ul(
             {
-              class: ["nav nav-treeview"]
+              class: ["nav nav-treeview"],
             },
             item.subitems.map(subItem(currentUrl))
-          )
+          ),
         ]
       : span({ class: "nav-link" }, text(item.label))
   );
 };
 
-const sideBarSection = currentUrl => section => [
-  section.section &&
-    li({ class: "nav-header text-uppercase" }, section.section),
-  section.items.map(sideBarItem(currentUrl)).join("")
-];
+const sideBarSection = (currentUrl) => (section) =>
+  [
+    section.section &&
+      li({ class: "nav-header text-uppercase" }, section.section),
+    section.items.map(sideBarItem(currentUrl)).join(""),
+  ];
 
 const sidebar = (brand, sections, currentUrl) =>
   aside(
@@ -92,7 +93,7 @@ const sidebar = (brand, sections, currentUrl) =>
     a(
       {
         class: "brand-link",
-        href: "/"
+        href: "/",
       },
       //div({class:"sidebar-brand-icon rotate-n-15"},
       //i({class:"fas fa-laugh-wink"})),
@@ -108,7 +109,7 @@ const sidebar = (brand, sections, currentUrl) =>
             "data-widget": "treeview",
             role: "menu",
             "data-accordion": "false",
-            id: "accordionSidebar"
+            id: "accordionSidebar",
           },
           sections.map(sideBarSection(currentUrl))
         )
@@ -138,7 +139,7 @@ const blockDispatch = {
         div(
           {
             class:
-              "row h-100 align-items-center justify-content-center text-center"
+              "row h-100 align-items-center justify-content-center text-center",
           },
           div(
             { class: "col-lg-10 align-self-end" },
@@ -158,14 +159,19 @@ const blockDispatch = {
           )
         )
       )
-    )
+    ),
 };
 const renderBody = (title, body) =>
   renderLayout({
     blockDispatch,
     layout:
-      typeof body === "string" ? { type: "card", title, contents: body } : body
+      typeof body === "string" ? { type: "card", title, contents: body } : body,
   });
+
+//const safeSlash = () => (isNode ? "/" : "");
+const servePrefix = `/plugins/public/adminlte@${
+  require("./package.json").version
+}`;
 
 const wrap = ({
   title,
@@ -174,7 +180,7 @@ const wrap = ({
   alerts,
   currentUrl,
   body,
-  headers
+  headers,
 }) => `<!doctype html>
 <html lang="en">
   <head>
@@ -189,14 +195,14 @@ const wrap = ({
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   
     <!-- Custom styles for this template-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css" rel="stylesheet">
+    <link href="${servePrefix}/adminlte.min.css" rel="stylesheet">
     ${headers
-      .filter(h => h.css)
-      .map(h => `<link href="${h.css}" rel="stylesheet">`)
+      .filter((h) => h.css)
+      .map((h) => `<link href="${h.css}" rel="stylesheet">`)
       .join("")}
     ${headers
-      .filter(h => h.headerTag)
-      .map(h => h.headerTag)
+      .filter((h) => h.headerTag)
+      .map((h) => h.headerTag)
       .join("")}
     <title>${text(title)}</title>
   </head>
@@ -207,7 +213,7 @@ const wrap = ({
       <div class="content-wrapper">
         <section id="content">
           <div class="container-fluid">
-            ${alerts.map(a => alert(a.type, a.msg)).join("")}
+            ${alerts.map((a) => alert(a.type, a.msg)).join("")}
             ${renderBody(title, body)}
           </div>
         </div>
@@ -223,11 +229,11 @@ const wrap = ({
     <!-- Core plugin JavaScript-->
     <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.0.7/vendor/jquery-easing/jquery.easing.min.js" integrity="sha256-H3cjtrm/ztDeuhCN9I4yh4iN2Ybx/y1RM7rMmAesA0k=" crossorigin="anonymous"></script>
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script>
+    <script src="${servePrefix}/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script>
     ${headers
-      .filter(h => h.script)
+      .filter((h) => h.script)
       .map(
-        h =>
+        (h) =>
           `<script src="${h.script}" ${
             h.integrity
               ? `integrity="${h.integrity}" crossorigin="anonymous"`
@@ -251,4 +257,8 @@ const alert = (type, s) => {
     : "";
 };
 
-module.exports = { sc_plugin_api_version: 1, layout: { wrap } };
+module.exports = {
+  sc_plugin_api_version: 1,
+  plugin_name: "adminlte",
+  layout: { wrap },
+};
