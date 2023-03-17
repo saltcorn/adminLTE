@@ -29,10 +29,18 @@ const subItem = (currentUrl) => (item) =>
             class: ["nav-link", active(currentUrl, item) && "active"],
             href: text(item.link),
           },
-          i({ class: "far fa-circle nav-icon" }),
+          item.icon
+            ? i({ class: `nav-icon ${item.icon}` })
+            : i({ class: "far fa-circle nav-icon" }),
           p(item.label)
         )
-      : h6({ class: "collapse-header" }, item.label)
+      : a(
+          {
+            class: ["nav-link"],
+            href: "javascript:;",
+          },
+          item.label
+        )
   );
 
 const active = (currentUrl, item) =>
@@ -44,15 +52,13 @@ const sideBarItem = (currentUrl) => (item) => {
   const is_active = active(currentUrl, item);
   return li(
     {
-      class: [
-        "nav-item",
-        item.subitems && "has-treeview",
-        item.subitems && is_active && "menu-open",
-      ],
+      class: ["nav-item", item.subitems && is_active && "menu-open"],
     },
     item.link
       ? a(
           { class: ["nav-link", is_active && "active"], href: text(item.link) },
+          item.icon ? i({ class: `nav-icon ${item.icon}` }) : "",
+
           p(text(item.label))
         )
       : item.subitems
@@ -62,8 +68,8 @@ const sideBarItem = (currentUrl) => (item) => {
               class: ["nav-link", is_active && "active"],
               href: "javascript:;",
             },
-            //i({ class: "fas fa-fw fa-wrench" }),
-            p(text(item.label), i({ class: "right fas fa-angle-left" }))
+            item.icon ? i({ class: `nav-icon ${item.icon}` }) : "",
+            p(text(item.label), i({ class: "end fas fa-angle-left" }))
           ),
           ul(
             {
