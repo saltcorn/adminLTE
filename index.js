@@ -89,15 +89,18 @@ const sideBarSection = (currentUrl) => (section) =>
 
 const sidebar = (brand, sections, currentUrl) =>
   aside(
-    { class: "main-sidebar sidebar-dark-primary elevation-4" },
-    a(
-      {
-        class: "brand-link",
-        href: "/",
-      },
-      //div({class:"sidebar-brand-icon rotate-n-15"},
-      //i({class:"fas fa-laugh-wink"})),
-      span({ class: "brand-text font-weight-light" }, brand.name)
+    { class: "main-sidebar sidebar-bg-dark sidebar-color-primary shadow" },
+    div(
+      { class: "brand-container" },
+      a(
+        {
+          class: "brand-link",
+          href: "/",
+        },
+        //div({class:"sidebar-brand-icon rotate-n-15"},
+        //i({class:"fas fa-laugh-wink"})),
+        span({ class: "brand-text font-weight-light" }, brand.name)
+      )
     ),
     div(
       { class: "sidebar" },
@@ -181,20 +184,15 @@ const wrap = ({
   currentUrl,
   body,
   headers,
+  role,
 }) => `<!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  
-    <!-- Custom styles for this template-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="${servePrefix}/overlayscrollbars.min.css">
+    <link rel="stylesheet" href="${servePrefix}/fontawesome/fontawesome.min.css">
     <link href="${servePrefix}/adminlte.min.css" rel="stylesheet">
     ${headers
       .filter((h) => h.css)
@@ -206,29 +204,26 @@ const wrap = ({
       .join("")}
     <title>${text(title)}</title>
   </head>
-  <body id="page-top" class="hold-transition sidebar-mini layout-fixed">
+  <body id="page-top" class="layout-fixed">
     <div id="wrapper">
       ${sidebar(brand, menu, currentUrl)}
 
-      <div class="content-wrapper">
-        <section id="content">
-          <div class="container-fluid">
-            ${alerts.map((a) => alert(a.type, a.msg)).join("")}
-            ${renderBody(title, body)}
+      <main class="content-wrapper">
+        <div id="content">
+          <div id="page-inner-content" class="container-fluid px-2">
+            <div id="alerts-area">
+              ${alerts.map((a) => alert(a.type, a.msg)).join("")}
+            </div>
+            <div >
+              ${renderBody(title, body, role)}
+            <div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.0.7/vendor/bootstrap/js/bootstrap.bundle.min.js" integrity="sha256-fzFFyH01cBVPYzl16KT40wqjhgPtq6FFUB6ckN2+GGw=" crossorigin="anonymous"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.0.7/vendor/jquery-easing/jquery.easing.min.js" integrity="sha256-H3cjtrm/ztDeuhCN9I4yh4iN2Ybx/y1RM7rMmAesA0k=" crossorigin="anonymous"></script>
-  
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.0.3/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-/dwBbLeVyyWBtWfH3jHdL2oVVmLKoGnEFzoOSL3nJC0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
     <script src="${servePrefix}/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script>
     ${headers
       .filter((h) => h.script)
