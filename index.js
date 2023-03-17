@@ -11,6 +11,7 @@ const {
   h1,
   p,
   header,
+  img,
   footer,
   mkTag,
   nav,
@@ -93,9 +94,25 @@ const sidebar = (brand, sections, currentUrl) =>
           class: "brand-link",
           href: "/",
         },
-        //div({class:"sidebar-brand-icon rotate-n-15"},
-        //i({class:"fas fa-laugh-wink"})),
+        brand.logo &&
+          img({
+            src: brand.logo,
+            width: "30",
+            height: "30",
+            class: "brand-image opacity-75 shadow",
+            alt: "Logo",
+            loading: "lazy",
+          }),
         span({ class: "brand-text font-weight-light" }, brand.name)
+      ),
+      a(
+        {
+          class: "pushmenu mx-1",
+          "data-lte-toggle": "sidebar-mini",
+          href: "javascript:;",
+          role: "button",
+        },
+        i({ class: "fas fa-angle-double-left" })
       )
     ),
     div(
