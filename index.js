@@ -77,7 +77,9 @@ const sideBarItem = (currentUrl) => (item) => {
 
 const sideBarSection = (currentUrl) => (section) =>
   [
-    section.section && li({ class: "nav-item" }, section.section),
+    section.section &&
+      section.section !== "Menu" &&
+      li({ class: "nav-header" }, section.section),
     section.items.map(sideBarItem(currentUrl)).join(""),
   ];
 
