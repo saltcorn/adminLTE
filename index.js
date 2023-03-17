@@ -14,11 +14,11 @@ const {
   footer,
   mkTag,
   nav,
+  aside,
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
 const db = require("@saltcorn/data/db");
 
-const aside = mkTag("aside");
 const subItem = (currentUrl) => (item) =>
   li(
     { class: "nav-item" },
@@ -34,13 +34,6 @@ const subItem = (currentUrl) => (item) =>
       : h6({ class: "collapse-header" }, item.label)
   );
 
-const labelToId = (item) => text(item.label.replace(" ", ""));
-
-const logit = (x, s) => {
-  if (s) console.log(s, x);
-  else console.log(x);
-  return x;
-};
 const active = (currentUrl, item) =>
   (item.link && currentUrl.startsWith(item.link)) ||
   (item.subitems &&
@@ -66,7 +59,7 @@ const sideBarItem = (currentUrl) => (item) => {
           a(
             {
               class: ["nav-link", is_active && "active"],
-              href: "#",
+              href: "javascript:;",
             },
             //i({ class: "fas fa-fw fa-wrench" }),
             p(text(item.label), i({ class: "right fas fa-angle-left" }))
@@ -84,8 +77,7 @@ const sideBarItem = (currentUrl) => (item) => {
 
 const sideBarSection = (currentUrl) => (section) =>
   [
-    section.section &&
-      li({ class: "nav-header text-uppercase" }, section.section),
+    section.section && li({ class: "nav-item" }, section.section),
     section.items.map(sideBarItem(currentUrl)).join(""),
   ];
 
@@ -111,7 +103,7 @@ const sidebar = (brand, sections, currentUrl) =>
         ul(
           {
             class: "nav nav-pills nav-sidebar flex-column",
-            "data-widget": "treeview",
+            "data-lte-toggle": "treeview",
             role: "menu",
             "data-accordion": "false",
             id: "accordionSidebar",
