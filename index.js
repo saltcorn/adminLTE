@@ -247,7 +247,11 @@ const subItem = (currentUrl) => (item) =>
     item.link
       ? a(
           {
-            class: ["nav-link", active(currentUrl, item) && "active"],
+            class: [
+              "nav-link",
+              active(currentUrl, item) && "active",
+              item.class,
+            ],
             href: text(item.link),
           },
           item.icon
