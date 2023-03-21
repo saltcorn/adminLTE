@@ -20,6 +20,10 @@ const {
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
 const db = require("@saltcorn/data/db");
+const {
+  headersInHead,
+  headersInBody,
+} = require("@saltcorn/markup/layout_utils");
 
 // http url prefix for serving static assets from public/
 const servePrefix = `/plugins/public/adminlte@${
@@ -46,14 +50,7 @@ const wrap = ({
     <link rel="stylesheet" href="${servePrefix}/overlayscrollbars.min.css">
     <link rel="stylesheet" href="${servePrefix}/fontawesome/fontawesome.min.css">
     <link href="${servePrefix}/adminlte.min.css" rel="stylesheet">
-    ${headers
-      .filter((h) => h.css)
-      .map((h) => `<link href="${h.css}" rel="stylesheet">`)
-      .join("")}
-    ${headers
-      .filter((h) => h.headerTag)
-      .map((h) => h.headerTag)
-      .join("")}
+    ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
   <body id="page-top" class="layout-fixed">
@@ -80,17 +77,16 @@ const wrap = ({
     <script src="${servePrefix}/popper.min.js"></script>
     <script src="${servePrefix}/bootstrap.min.js"></script>
     <script src="${servePrefix}/adminlte.min.js"></script>
-    ${headers
-      .filter((h) => h.script)
-      .map(
-        (h) =>
-          `<script src="${h.script}" ${
-            h.integrity
-              ? `integrity="${h.integrity}" crossorigin="anonymous"`
-              : ""
-          }></script>`
-      )
-      .join("")}
+    ${headersInBody(headers)}
+    <script>
+    function update_theme_notification_count(n) {
+    $("a.notify-menu-item").html(
+      '<i class="nav-icon fas fa-bell"></i><p>Notifications ('+n+')</p>');
+    $(".admlte-user-navbar>a.nav-link").html(
+      '<i class="nav-icon fas fa-user"></i><p>User ('+n+')<i class="end fas fa-angle-left"></i></p>');
+    }
+    </script>
+
   </body>
 </html>`;
 
@@ -211,7 +207,11 @@ const sideBarItem = (currentUrl) => (item) => {
   const is_active = active(currentUrl, item);
   return li(
     {
-      class: ["nav-item", item.subitems && is_active && "menu-open"],
+      class: [
+        "nav-item",
+        item.subitems && is_active && "menu-open",
+        item.isUser && "admlte-user-navbar",
+      ],
     },
     item.link
       ? a(
