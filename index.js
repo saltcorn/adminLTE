@@ -92,9 +92,10 @@ const wrap = ({
 
 // render the body by calling back to Saltcorn's renderLayout, supplying the
 // custom blockDispatch, which specifies how certain layout elements should be rendered
-const renderBody = (title, body) =>
+const renderBody = (title, body, role) =>
   renderLayout({
     blockDispatch,
+    role,
     layout:
       typeof body === "string" ? { type: "card", title, contents: body } : body,
   });
@@ -288,8 +289,16 @@ const alert = (type, s) => {
     : "";
 };
 
+const exportRenderBody = ({ title, body, alerts, role }) =>
+  `<div id="alerts-area">
+    ${alerts.map((a) => alert(a.type, a.msg)).join("")}
+  </div>
+  <div >
+    ${renderBody(title, body, role)}
+  <div>`;
+
 module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "adminlte",
-  layout: { wrap },
+  layout: { wrap, renderBody: exportRenderBody },
 };
