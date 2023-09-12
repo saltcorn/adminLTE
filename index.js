@@ -41,6 +41,7 @@ const wrap = ({
   body,
   headers,
   role,
+  req,
 }) => `<!doctype html>
 <html lang="en">
   <head>
@@ -64,7 +65,7 @@ const wrap = ({
               ${alerts.map((a) => alert(a.type, a.msg)).join("")}
             </div>
             <div >
-              ${renderBody(title, body, role)}
+              ${renderBody(title, body, role, req)}
             <div>
           </div>
         </div>
@@ -92,10 +93,11 @@ const wrap = ({
 
 // render the body by calling back to Saltcorn's renderLayout, supplying the
 // custom blockDispatch, which specifies how certain layout elements should be rendered
-const renderBody = (title, body, role) =>
+const renderBody = (title, body, role, req) =>
   renderLayout({
     blockDispatch,
     role,
+    req,
     layout:
       typeof body === "string" ? { type: "card", title, contents: body } : body,
   });
@@ -289,12 +291,12 @@ const alert = (type, s) => {
     : "";
 };
 
-const exportRenderBody = ({ title, body, alerts, role }) =>
+const exportRenderBody = ({ title, body, alerts, role, req }) =>
   `<div id="alerts-area">
     ${alerts.map((a) => alert(a.type, a.msg)).join("")}
   </div>
   <div >
-    ${renderBody(title, body, role)}
+    ${renderBody(title, body, role, req)}
   <div>`;
 
 module.exports = {
