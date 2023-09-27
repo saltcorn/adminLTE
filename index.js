@@ -234,7 +234,11 @@ const sideBarItem = (currentUrl) => (item) => {
     },
     item.link
       ? a(
-          { class: ["nav-link", is_active && "active"], href: text(item.link) },
+          {
+            class: ["nav-link", is_active && "active"],
+            href: text(item.link),
+            target: item.target_blank ? "_blank" : undefined,
+          },
           item.icon ? i({ class: `nav-icon ${item.icon}` }) : "",
 
           p(text(item.label))
@@ -271,6 +275,7 @@ const subItem = (currentUrl) => (item) =>
               active(currentUrl, item) && "active",
               item.class,
             ],
+            target: item.target_blank ? "_blank" : undefined,
             href: text(item.link),
           },
           item.icon
