@@ -23,6 +23,7 @@ const db = require("@saltcorn/data/db");
 const {
   headersInHead,
   headersInBody,
+  toast,
 } = require("@saltcorn/markup/layout_utils");
 
 // http url prefix for serving static assets from public/
@@ -62,7 +63,7 @@ const wrap = ({
         <div id="content">
           <div id="page-inner-content" class="container-fluid px-2">
             <div id="alerts-area">
-              ${alerts.map((a) => alert(a.type, a.msg)).join("")}
+              ${toast ? "" : alerts.map((a) => alert(a.type, a.msg)).join("")}
             </div>
             <div >
               ${renderBody(title, body, role, req)}
@@ -70,6 +71,21 @@ const wrap = ({
           </div>
         </div>
       </main>
+      ${
+        toast
+          ? `
+      <div 
+        id="toasts-area"
+        class="toast-container position-fixed top-0 start-50 p-0"
+        style: "z-index: 999;"
+        aria-live="polite" 
+        aria-atomic="true"
+      >
+        ${alerts.map((a) => toast(a.type, a.msg)).join("")}
+      </div>
+      `
+          : ""
+      }
     </div>
     <script src="/static_assets/${
       db.connectObj.version_tag
@@ -293,10 +309,25 @@ const alert = (type, s) => {
 
 const exportRenderBody = ({ title, body, alerts, role, req }) =>
   `<div id="alerts-area">
-    ${alerts.map((a) => alert(a.type, a.msg)).join("")}
+    ${toast ? "" : alerts.map((a) => alert(a.type, a.msg)).join("")}
   </div>
   <div >
     ${renderBody(title, body, role, req)}
+    ${
+      toast
+        ? `
+    <div 
+      id="toasts-area"
+      class="toast-container position-fixed top-0 start-50 p-0"
+      style: "z-index: 999;"
+      aria-live="polite" 
+      aria-atomic="true"
+    >
+      ${alerts.map((a) => toast(a.type, a.msg)).join("")}
+    </div>
+    `
+        : ""
+    }
   <div>`;
 
 module.exports = {
