@@ -74,9 +74,9 @@ const wrap = ({
       ${
         toast
           ? `
-      <div 
+      <div
         id="toasts-area"
-        class="toast-container position-fixed top-0 start-50 p-0"
+        class="toast-container position-fixed top-0 end-0 p-2"
         style: "z-index: 999;"
         aria-live="polite" 
         aria-atomic="true"
