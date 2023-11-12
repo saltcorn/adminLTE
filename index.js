@@ -30,6 +30,7 @@ const {
 const servePrefix = `/plugins/public/adminlte@${
   require("./package.json").version
 }`;
+const { renderForm, link } = require("@saltcorn/markup");
 
 // This is the core function for Saltcorn layout. It takes as argument an object with
 // the specification for the page and must return a string with the full rendered page.
@@ -86,6 +87,95 @@ const wrap = ({
       `
           : ""
       }
+    </div>
+    <script src="/static_assets/${
+      db.connectObj.version_tag
+    }/jquery-3.6.0.min.js"></script>
+    <script src="${servePrefix}/overlayscrollbars.browser.es6.min.js"></script>
+    <script src="${servePrefix}/popper.min.js"></script>
+    <script src="${servePrefix}/bootstrap.min.js"></script>
+    <script src="${servePrefix}/adminlte.min.js"></script>
+    ${headersInBody(headers)}
+    <script>
+    function update_theme_notification_count(n) {
+    $("a.notify-menu-item").html(
+      '<i class="nav-icon fas fa-bell"></i><p>Notifications ('+n+')</p>');
+    $(".admlte-user-navbar>a.nav-link").html(
+      '<i class="nav-icon fas fa-user"></i><p>User ('+n+')<i class="end fas fa-angle-left"></i></p>');
+    }
+    </script>
+
+  </body>
+</html>`;
+
+const formModify = (form) => {
+  form.formStyle = "vert";
+  form.submitButtonClass = "btn-primary btn-user btn-block";
+  return form;
+};
+
+const renderAuthLinks = (authLinks) => {
+  var links = [];
+  if (authLinks.login)
+    links.push(link(authLinks.login, "Already have an account? Login!"));
+  if (authLinks.forgot) links.push(link(authLinks.forgot, "Forgot password?"));
+  if (authLinks.signup)
+    links.push(link(authLinks.signup, "Create an account!"));
+  const meth_links = (authLinks.methods || [])
+    .map(({ url, icon, label }) =>
+      a(
+        { href: url, class: "btn btn-secondary btn-user btn-block" },
+        icon || "",
+        `&nbsp;Login with ${label}`
+      )
+    )
+    .join("");
+
+  return (
+    meth_links + links.map((l) => div({ class: "text-center" }, l)).join("")
+  );
+};
+
+const authBrand = ({ name, logo }) =>
+  logo
+    ? `<img class="mb-4" src="${logo}" alt="Logo" width="72" height="72">`
+    : `<h2>${name}</h2>`;
+
+const authWrap = ({
+  title,
+  alerts, //TODO
+  form,
+  afterForm,
+  headers,
+  brand,
+  csrfToken,
+  authLinks,
+}) => `<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="${servePrefix}/overlayscrollbars.min.css">
+    <link rel="stylesheet" href="${servePrefix}/fontawesome/fontawesome.min.css">
+    <link href="${servePrefix}/adminlte.min.css" rel="stylesheet">
+    ${headersInHead(headers)}
+    <title>${text(title)}</title>
+  </head>
+  <body id="page-top" class="hold-transition login-page">
+    <div class="login-box">
+      ${alerts.map((a) => alert(a.type, a.msg)).join("")}
+      <div class="card card-outline card-primary">
+      <div class="card-header text-center">
+        ${authBrand(brand)}
+      </div>
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">${title}</p>
+          ${renderForm(formModify(form), csrfToken)}
+          ${renderAuthLinks(authLinks)}
+          ${afterForm}
+        </div>
+      </div>
     </div>
     <script src="/static_assets/${
       db.connectObj.version_tag
@@ -338,5 +428,5 @@ const exportRenderBody = ({ title, body, alerts, role, req }) =>
 module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "adminlte",
-  layout: { wrap, renderBody: exportRenderBody },
+  layout: { wrap, authWrap, renderBody: exportRenderBody },
 };
