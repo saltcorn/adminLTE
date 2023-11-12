@@ -305,12 +305,7 @@ const sidebar = (brand, sections, currentUrl) =>
   );
 
 const sideBarSection = (currentUrl) => (section) =>
-  [
-    section.section &&
-      section.section !== "Menu" &&
-      li({ class: "nav-header" }, section.section),
-    section.items.map(sideBarItem(currentUrl)).join(""),
-  ];
+  section.items.map(sideBarItem(currentUrl)).join("");
 
 const sideBarItem = (currentUrl) => (item) => {
   const is_active = active(currentUrl, item);
