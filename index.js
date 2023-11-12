@@ -56,13 +56,13 @@ const wrap = ({
     ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
-  <body id="page-top" class="layout-fixed">
+  <body id="page-top" class="sidebar-mini layout-fixed" style="height: auto;">
     <div id="wrapper">
       ${sidebar(brand, menu, currentUrl)}
 
       <main class="content-wrapper">
-        <div id="content">
-          <div id="page-inner-content" class="container-fluid px-2">
+        <section id="content">
+          <div id="page-inner-content" class="container-fluid">
             <div id="alerts-area">
               ${toast ? "" : alerts.map((a) => alert(a.type, a.msg)).join("")}
             </div>
