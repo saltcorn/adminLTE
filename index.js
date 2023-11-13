@@ -313,7 +313,9 @@ const sideBarItem = (currentUrl) => (item) => {
         item.isUser && "admlte-user-navbar",
       ],
     },
-    item.link
+    item.type === "Separator"
+      ? hr({ class: "mx-4 my-0" })
+      : item.link
       ? a(
           {
             class: ["nav-link", is_active && "active"],
