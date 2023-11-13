@@ -11,9 +11,12 @@ const {
   h6,
   h1,
   p,
+  form,
   header,
   img,
   footer,
+  input,
+  button,
   mkTag,
   nav,
   aside,
@@ -313,7 +316,39 @@ const sideBarItem = (currentUrl) => (item) => {
         item.isUser && "admlte-user-navbar",
       ],
     },
-    item.type === "Separator"
+    item.type === "Search"
+      ? div(
+          { class: "form-inline" },
+          form(
+            {
+              action: "/search",
+              class: "menusearch",
+              method: "get",
+            },
+            div(
+              { class: "input-group search-bar" },
+
+              input({
+                type: "search",
+                class: "form-control search-bar ps-2 hasbl",
+                placeholder: item.label,
+                id: "inputq",
+                name: "q",
+                "aria-label": "Search",
+                "aria-describedby": "button-search-submit",
+              }),
+
+              button(
+                {
+                  class: "btn btn-outline-secondary search-bar",
+                  type: "submit",
+                },
+                i({ class: "fas fa-search" })
+              )
+            )
+          )
+        )
+      : item.type === "Separator"
       ? hr({ class: "mx-4 my-0" })
       : item.link
       ? a(
