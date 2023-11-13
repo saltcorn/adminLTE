@@ -91,9 +91,7 @@ const wrap = ({
     <script src="/static_assets/${
       db.connectObj.version_tag
     }/jquery-3.6.0.min.js"></script>
-    <script src="${servePrefix}/overlayscrollbars.browser.es6.min.js"></script>
-    <script src="${servePrefix}/popper.min.js"></script>
-    <script src="${servePrefix}/bootstrap.min.js"></script>
+    <script src="${servePrefix}/bootstrap.bundle.min.js"></script>
     <script src="${servePrefix}/adminlte.min.js"></script>
     ${headersInBody(headers)}
     <script>
@@ -180,9 +178,7 @@ const authWrap = ({
     <script src="/static_assets/${
       db.connectObj.version_tag
     }/jquery-3.6.0.min.js"></script>
-    <script src="${servePrefix}/overlayscrollbars.browser.es6.min.js"></script>
-    <script src="${servePrefix}/popper.min.js"></script>
-    <script src="${servePrefix}/bootstrap.min.js"></script>
+    <script src="${servePrefix}/bootstrap.bundle.min.js"></script>
     <script src="${servePrefix}/adminlte.min.js"></script>
     ${headersInBody(headers)}
     <script>
